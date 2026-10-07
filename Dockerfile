@@ -42,11 +42,18 @@ RUN case "$TAG" in \
 
 WORKDIR /app/project
 
-# Copy package files for the current package
-COPY package.json pnpm-lock.yaml ./
+# Copy package files for the current package. The lockfile is optional: this
+# repo uses bun, so pnpm-lock.yaml may not exist, and a bare COPY of a missing
+# path fails the build.
+COPY package.json ./
+COPY . /tmp/src
+RUN if [ -f /tmp/src/pnpm-lock.yaml ]; then cp /tmp/src/pnpm-lock.yaml ./; fi && rm -rf /tmp/src
 
 # Install the current package (this package)
-ARG PACKAGE_NAME
+# Defaulted so the image is buildable without build args: vetra-deploy-action
+# does not pass any, and without a name the build falls through to a pnpm
+# install this repo has no lockfile for.
+ARG PACKAGE_NAME=@powerhousedao/knowledge-note
 RUN if [ -n "$PACKAGE_NAME" ]; then \
         echo "Installing package: $PACKAGE_NAME"; \
         ph install "$PACKAGE_NAME"; \
