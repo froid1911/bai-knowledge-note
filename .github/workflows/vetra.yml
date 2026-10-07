@@ -26,6 +26,12 @@ jobs:
       # defaults to 22.
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
+      # vetra-deploy-action shells out to pnpm to publish the package, whatever
+      # the repo itself uses, so pnpm has to be on PATH even though bun installs
+      # the dependencies. A version is pinned because package.json declares no
+      # packageManager field.
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
       - uses: powerhouse-inc/vetra-deploy-action@v1
         with:
           app-id: ffdbb9c9-2fc5-408f-b034-6f78c7692449
