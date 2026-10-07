@@ -31,7 +31,7 @@ jobs:
       # the dependencies. A version is pinned because package.json declares no
       # packageManager field.
       - uses: pnpm/action-setup@v4
-        with: { version: 10 }
+        with: { version: 9 }
       - uses: powerhouse-inc/vetra-deploy-action@v1
         with:
           app-id: ffdbb9c9-2fc5-408f-b034-6f78c7692449
