@@ -35,14 +35,10 @@ jobs:
       - uses: powerhouse-inc/vetra-deploy-action@v1
         with:
           app-id: ffdbb9c9-2fc5-408f-b034-6f78c7692449
-          # The image installs the published package; nothing here needs a repo
-          # build, and the Dockerfile does its own install.
-          install-command: ''
-          build-command: ''
-          # @powerhousedao/knowledge-note is published upstream (latest 1.0.52).
-          # This fork must not republish it: the registry refuses with
-          # "not authorized to publish ... (owned by another user)".
-          package-dirs: ''
-          fusion-dockerfile: Dockerfile
-          fusion-context: .
-          fusion-image-name: knowledge-note
+          # A Powerhouse package: install with bun, build with ph-cli (the
+          # `build` script), then the action packs and publishes it to the Vetra
+          # registry and deploys it. Published as `bai-knowledge-note`: the
+          # upstream name @powerhousedao/knowledge-note belongs to its owner.
+          install-command: bun install --frozen-lockfile
+          build-command: bun run build
+          package-dirs: .
